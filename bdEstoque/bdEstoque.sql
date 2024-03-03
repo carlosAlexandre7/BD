@@ -31,5 +31,17 @@ codVenda  INT PRIMARY KEY IDENTITY(1,1)
 )
 
 CREATE TABLE tbProduto(
+codProduto INT PRIMARY KEY IDENTITY(1,1)
+,descricaoProduto VARCHAR (400)
+,valorProduto MONEY
+,quantidadeProduto VARCHAR (7)
+,codFabricante INT FOREIGN KEY REFERENCES tbFabricante (codFabricante)
+)
 
+CREATE TABLE tbItensVenda(
+codItensVenda INT PRIMARY KEY IDENTITY(1,1)
+,codVenda INT FOREIGN KEY REFERENCES tbVenda (codVenda)
+,codProduto INT FOREIGN KEY REFERENCES tbProduto (codProduto)
+,quantidadeItensVenda VARCHAR (7)
+,subTotalItensVenda MONEY
 )
