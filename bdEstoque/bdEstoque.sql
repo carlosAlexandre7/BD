@@ -36,6 +36,7 @@ codProduto INT PRIMARY KEY IDENTITY(1,1)
 ,valorProduto MONEY
 ,quantidadeProduto VARCHAR (7)
 ,codFabricante INT FOREIGN KEY REFERENCES tbFabricante (codFabricante)
+,codFornecedor INT FOREIGN KEY REFERENCES tbFornecedor (codFornecedor)
 )
 
 CREATE TABLE tbItensVenda(
@@ -112,3 +113,22 @@ VALUES
 ,(200,1700)
 ,(1000,4000)
 
+USE bdEstoque
+
+SELECT SUM(quantidadeProduto) FROM tbProduto
+WHERE codFabricante = 2
+
+SELECT AVG(valorProduto) FROM tbProduto
+WHERE codFabricante = 2
+
+SELECT  SUM(valorProduto) FROM tbProduto
+WHERE codProduto = 1
+
+SELECT AVG(valorProduto) FROM tbProduto
+WHERE codFabricante = 3
+
+SELECT SUM(valorProduto) FROM tbProduto
+WHERE codFabricante = 3
+
+SELECT AVG(valorProduto) FROM tbProduto
+WHERE codFabricante = 1
