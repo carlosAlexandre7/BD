@@ -46,8 +46,6 @@ codItensVenda INT PRIMARY KEY IDENTITY(1,1)
 ,subTotalItensVenda MONEY
 )
 
-USE bdEstoque
-
 INSERT INTO tbCliente (nomeCliente,cpfCliente,emailCliente,sexoCliente,dataNascimento)        
 VALUES
         ('Amando José Santana','123.456.789-00','amandojsanatana@outlook.com','M','21/02/1961')
