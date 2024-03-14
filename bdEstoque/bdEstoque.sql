@@ -1,11 +1,11 @@
 CREATE DATABASE bdEstoque
 GO
 USE bdEstoque
-/*DROP DATABASE*/
+/*DROP DATABASE bdEstoque*/
 
 CREATE TABLE tbCliente(
 codCliente INT PRIMARY KEY IDENTITY(1,1)
-,nomeCliente VARCHAR (61)
+,nomeCliente VARCHAR (200)
 ,cpfCliente CHAR (14)
 ,emailCliente VARCHAR (40)
 ,sexoCliente CHAR (1)
@@ -46,7 +46,7 @@ codItensVenda INT PRIMARY KEY IDENTITY(1,1)
 ,subTotalItensVenda MONEY
 )
 
-INSERT INTO tbCliente (nomeCliente,cpfCliente,emailCliente,sexoCliente,dataNascimento)        
+INSERT INTO tbCliente (nomeCliente,cpfCliente,emailCliente,sexoCliente,dataNascimentoCliente)        
 VALUES
         ('Amando José Santana','123.456.789-00','amandojsanatana@outlook.com','M','21/02/1961')
         ,('Sheila Carvalho Leal','456.789.098-23','scarvalho@ig.com.br','F','13/09/1978')
@@ -70,9 +70,9 @@ VALUES
 INSERT INTO tbProduto (descricaoProduto,valorProduto,quantidadeProduto)
 VALUES
         ('Amaciante Downy',5.76,1500)
-        ,('Amaciante Comfort',5.45.2300)
+        ,('Amaciante Comfort',5.45,2300)
         ,('Sabão em pó OMO',5.99,1280)
-        ,('Margarina Qually',4,76,2500)
+        ,('Margarina Qually',4.76,2500)
         ,('Salsicha Hot Dog Saddia',6.78,2900)
         ,('Mortadela Perdigão',2.50,1200)
         ,('Hamburguer Saddia',9.89,1600)
@@ -80,8 +80,7 @@ VALUES
         ,('Xampu Seda',5.89,800)
         ,('Condicionador Seda',6.50,700)
 
-INSERT INTO tbVenda
-tbVenda(dataVenda,valorTotalVenda)
+INSERT INTO tbVenda(dataVenda,valorTotalVenda)
 VALUES
 ('01/02/2014',4500)
 ,('03/02/2014',3400)
@@ -112,3 +111,4 @@ VALUES
 ,(250,1700)
 ,(200,1700)
 ,(1000,4000)
+
