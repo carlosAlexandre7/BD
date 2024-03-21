@@ -25,7 +25,7 @@ codFornecedor INT PRIMARY KEY IDENTITY(1,1)
 
 CREATE TABLE tbVenda(
 codVenda  INT PRIMARY KEY IDENTITY(1,1)
-,dataVenda DATETIME
+,dataVenda DATE
 ,valorTotalVenda MONEY
 ,codCliente INT FOREIGN KEY REFERENCES tbCliente(codCliente)
 )
@@ -34,7 +34,7 @@ CREATE TABLE tbProduto(
 codProduto INT PRIMARY KEY IDENTITY(1,1)
 ,descricaoProduto VARCHAR (400)
 ,valorProduto MONEY
-,quantidadeProduto VARCHAR (7)
+,quantidadeProduto INT
 ,codFabricante INT FOREIGN KEY REFERENCES tbFabricante (codFabricante)
 ,codFornecedor INT FOREIGN KEY REFERENCES tbFornecedor (codFornecedor)
 )
@@ -113,22 +113,61 @@ VALUES
 ,(200,1700)
 ,(1000,4000)
 
-USE bdEstoque
+aSELECT SUM(quantidadeProduto) FROM tbProduto
+WHERE codFabricante = 2
+
+bSELECT AVG(valorProduto) FROM tbProduto
+WHERE codFabricante = 2
+
+cSELECT SUM(valorProduto) FROM tbProduto
+WHERE codFabricante = 1
+
+dSELECT AVG(valorProduto) FROM tbProduto
+WHERE codFabricante = 3
+
+eSELECT SUM(quantidadeProduto) FROM tbProduto
+WHERE codFabricante = 3
+
+fSELECT AVG(valorProduto) FROM tbProduto
+WHERE codFabricante = 1
+
+gSELECT AVG(quantidadeProduto) FROM tbProduto
+WHERE codFabricante = 2
+
+hSELECT AVG(valorProduto) FROM tbProduto
+WHERE quantidadeProduto <= 200
+
+iSELECT AVG(quantidadeProduto) FROM tbProduto
+WHERE codFabricante = 1
+
+SELECT SUM(valorTotalVenda) FROM tbVenda 
+WHERE (MONTH(dataVenda) = 2 AND YEAR(dataVenda) = 2014) 
+    OR (MONTH(dataVenda) = 3 AND YEAR(dataVenda) = 2014)
 
 SELECT SUM(quantidadeProduto) FROM tbProduto
-WHERE codFabricante = 2
+WHERE codProduto < 3
 
-SELECT AVG(valorProduto) FROM tbProduto
-WHERE codFabricante = 2
+SELECT MAX(valorproduto) FROM tbProduto
 
-SELECT  SUM(valorProduto) FROM tbProduto
-WHERE codProduto = 1
+SELECT MIN(valorproduto) FROM tbProduto
 
-SELECT AVG(valorProduto) FROM tbProduto
-WHERE codFabricante = 3
+nSELECT AVG(quantidadeProduto) FROM tbProduto
+WHERE codProduto < 3
 
-SELECT SUM(valorProduto) FROM tbProduto
-WHERE codFabricante = 3
+SELECT COUNT(descricaoProduto) FROM tbProduto
 
-SELECT AVG(valorProduto) FROM tbProduto
+SELECT COUNT(quantidadeProduto) FROM tbProduto
 WHERE codFabricante = 1
+
+SELECT COUNT(quantidadeProduto) FROM tbProduto
+WHERE codFabricante != 1
+
+SELECT SUM(quantidadeProduto) FROM tbProduto
+WHERE quantidadeProduto > 800
+
+SELECT AVG(quantidadeProduto) FROM tbProduto
+WHERE quantidadeProduto > 1000 
+AND codFabricante = 1
+
+SELECT SUM(valorTotalVenda) FROM tbVenda
+WHERE YEAR(dataVenda) = 2014
