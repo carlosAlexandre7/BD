@@ -50,7 +50,7 @@ SELECT COUNT(tbAluno.nomeAluno), naturalidadeAluno, tbTurma.codCurso FROM tbAlun
 
 --Apresentar o nome dos alunos ao lado da data de matrícula no formato dd/mm/aaaa--
 
-SELECT nomeAluno, dataMatricula FROM tbAluno
+SELECT nomeAluno, CONVERT(VARCHAR(12),dataMatricula,103) FROM tbAluno
 	INNER JOIN tbMatricula ON tbMatricula.codAluno = tbAluno.codAluno
 
 --Apresentar os alunos cujo nome comece com A e que estejam matriculados no curso de inglês--
