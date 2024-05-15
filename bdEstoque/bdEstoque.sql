@@ -1,7 +1,7 @@
 CREATE DATABASE bdEstoque
 GO
 USE bdEstoque
---DATABASE DROP bdEstoque
+--DROP DATABASE bdEstoque
 
 CREATE TABLE tbCliente(
 codCliente INT PRIMARY KEY IDENTITY(1,1)
@@ -112,6 +112,7 @@ VALUES
 ,(250,1700)
 ,(200,1700)
 ,(1000,4000)
+
 
 
 
