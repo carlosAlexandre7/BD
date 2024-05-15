@@ -1,7 +1,7 @@
 CREATE DATABASE bdEstoque
 GO
 USE bdEstoque
-/*DROP DATABASE bdEstoque*/
+--DATABASE DROP bdEstoque
 
 CREATE TABLE tbCliente(
 codCliente INT PRIMARY KEY IDENTITY(1,1)
@@ -61,25 +61,25 @@ VALUES
         ('Unilever')
         ,('P&G')
         ,('Bunge')
-
+			
 INSERT INTO tbFornecedor (nomeFornecedor,contatoFornecedor)
 VALUES
         ('Atacadão','Carlos Santos')
         ,('Assai','Maria Stella')
         ,('Roldão','Paulo César')
 
-INSERT INTO tbProduto (descricaoProduto,valorProduto,quantidadeProduto)
+INSERT INTO tbProduto (descricaoProduto,valorProduto,quantidadeProduto,codFabricante,codFornecedor)                         
 VALUES
-        ('Amaciante Downy',5.76,1500)
-        ,('Amaciante Comfort',5.45,2300)
-        ,('Sabão em pó OMO',5.99,1280)
-        ,('Margarina Qually',4.76,2500)
-        ,('Salsicha Hot Dog Saddia',6.78,2900)
-        ,('Mortadela Perdigão',2.50,1200)
-        ,('Hamburguer Saddia',9.89,1600)
-        ,('Fralda Pampers',36,340)
-        ,('Xampu Seda',5.89,800)
-        ,('Condicionador Seda',6.50,700)
+        ('Amaciante Downy',5.76,1500,2,1)
+        ,('Amaciante Comfort',5.45,2300,1,1)
+        ,('Sabão em pó OMO',5.99,1280,1,2)
+        ,('Margarina Qually',4.76,2500,3,1)
+        ,('Salsicha Hot Dog Saddia',6.78,2900,3,2)
+        ,('Mortadela Perdigão',2.50,1200,3,3)
+        ,('Hamburguer Saddia',9.89,1600,3,1)
+        ,('Fralda Pampers',36,340,2,3)
+        ,('Xampu Seda',5.89,800,1,2)
+        ,('Condicionador Seda',6.50,700,1,3)
 
 INSERT INTO tbVenda(dataVenda,valorTotalVenda)
 VALUES
@@ -112,6 +112,8 @@ VALUES
 ,(250,1700)
 ,(200,1700)
 ,(1000,4000)
+
+
 
 aSELECT SUM(quantidadeProduto) FROM tbProduto
 WHERE codFabricante = 2
