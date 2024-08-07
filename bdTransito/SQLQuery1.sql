@@ -1,12 +1,13 @@
 CREATE DATABASE bdTransito
+USE bdTransito
 /*DROP DATABASE bdTransito*/
 
 CREATE TABLE tbMotorista (
 idMotorista INT PRIMARY KEY IDENTITY (1,1) NOT NULL
 ,nomeMotorista VARCHAR(200)
 ,dataNascimentoMotorista DATE
-,cpfMotorista  INT
-,CNHMotorista INT
+,cpfMotorista  VARCHAR(11)
+,CNHMotorista VARCHAR(9)
 ,pontuacaoAcumulada INT
 );
 
@@ -26,4 +27,3 @@ idMulta INT PRIMARY KEY IDENTITY (1,1) NOT NULL
 ,pontosMultas INT 
 ,idVeiculo INT FOREIGN KEY REFERENCES tbVeiculo(idVeiculo)
 );
-
