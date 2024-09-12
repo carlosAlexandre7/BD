@@ -4,7 +4,7 @@ CREATE PROCEDURE spInsert_Ctg
 AS 
 	IF EXISTS(SELECT nomeCategoria FROM tblCategoriaProduto WHERE nomeCategoria LIKE @nomeCategoria)
 	BEGIN
-		PRINT ('N„o foi possivel cadastrar! categoria ' +@nomeCategoria+' j· cadastrado!')
+		PRINT ('N√£o foi possivel cadastrar! categoria ' +@nomeCategoria+' j√° cadastrado!')
 	END
 	ELSE
 	BEGIN
@@ -19,8 +19,8 @@ EXEC spInsert_Ctg 'Bolo Simples'
 EXEC spInsert_Ctg 'Bolo Torta'
 EXEC spInsert_Ctg 'Salgado'
 
-/*b) Criar uma Stored Procedure para inserir os produtos abaixo, sendo que, a procedure dever· 
-antes de inserir verificar se o nome do produto j· existe, evitando assim que um produto seja 
+/*b) Criar uma Stored Procedure para inserir os produtos abaixo, sendo que, a procedure dever√° 
+antes de inserir verificar se o nome do produto j√° existe, evitando assim que um produto seja 
 duplicado*/
 
 CREATE PROCEDURE spInsert_produto
@@ -30,7 +30,7 @@ CREATE PROCEDURE spInsert_produto
 AS
 	IF EXISTS (SELECT nomeProduto FROM tblProduto WHERE nomeProduto LIKE @nomeProduto)
 	BEGIN
-		PRINT ('N„o foi possivel cadastrar! produto ' +@nomeProduto+' j· cadastrado!')
+		PRINT ('N√£o foi possivel cadastrar! produto ' +@nomeProduto+' j√° cadastrado!')
 	END
 	ELSE
 	BEGIN
@@ -54,14 +54,14 @@ EXEC spInsert_produto 'Risoles Misto',29,4
 
 SELECT * FROM tblProduto
 
-/*c) Criar uma stored procedure para cadastrar os clientes abaixo relacionados, sendo que dever„o 
-ser feitas duas validaÁıes:
-- Verificar pelo CPF se o cliente j· existe. Caso j· exista emitir a mensagem: ìCliente cpf XXXXX 
-j· cadastradoî (Acrescentar a coluna CPF)
-- Verificar se o cliente È morador de Itaquera ou Guaianases, pois a confeitaria n„o realiza 
-entregas para clientes que residam fora desses bairros. Caso o cliente n„o seja morador desses 
-bairros enviar a mensagem ìN„o foi possÌvel cadastrar o cliente XXXX pois o bairro XXXX n„o È 
-atendido pela confeitariaî*/
+/*c) Criar uma stored procedure para cadastrar os clientes abaixo relacionados, sendo que dever√£o 
+ser feitas duas valida√ß√µes:
+- Verificar pelo CPF se o cliente j√° existe. Caso j√° exista emitir a mensagem: ‚ÄúCliente cpf XXXXX 
+j√° cadastrado‚Äù (Acrescentar a coluna CPF)
+- Verificar se o cliente √© morador de Itaquera ou Guaianases, pois a confeitaria n√£o realiza 
+entregas para clientes que residam fora desses bairros. Caso o cliente n√£o seja morador desses 
+bairros enviar a mensagem ‚ÄúN√£o foi poss√≠vel cadastrar o cliente XXXX pois o bairro XXXX n√£o √© 
+atendido pela confeitaria‚Äù*/
 
 	CREATE PROCEDURE spInsert_Cliente
 		@nome VARCHAR(255),                  
@@ -77,13 +77,13 @@ atendido pela confeitariaî*/
 	AS
 		IF EXISTS (SELECT cpfCliente FROM tblCliente WHERE cpfCliente LIKE @cpf)
 		BEGIN
-			PRINT ('N„o foi possivel cadastrar! produto ' +@cpf+' j· cadastrado!')
+			PRINT ('N√£o foi possivel cadastrar! produto ' +@cpf+' j√° cadastrado!')
 		END
 		ELSE
 		BEGIN
 			IF EXISTS (SELECT bairroCliente FROM tblCliente WHERE bairroCliente NOT LIKE 'Itaquera' AND bairroCliente NOT LIKE 'Guaianases')
 			BEGIN
-				PRINT ('N„o foi possivel cadastrar! n„o atendemos o bairro ' +@Bairro)
+				PRINT ('N√£o foi possivel cadastrar! n√£o atendemos o bairro ' +@Bairro)
 			END
 			ELSE
 			BEGIN
@@ -94,21 +94,21 @@ atendido pela confeitariaî*/
 
 		
 
-EXEC spInsert_Cliente 'Samira Fatah', '1990-05-05', 'Rua AguapeÌ', 1000, '08.090-000', 'Guaianases','SP', 'SP', '305.928.716-32', 'F'
+EXEC spInsert_Cliente 'Samira Fatah', '1990-05-05', 'Rua Aguape√≠', 1000, '08.090-000', 'Guaianases','SP', 'SP', '305.928.716-32', 'F'
 EXEC spInsert_Cliente 'Celia Nogueira', '1992-06-06 00:00:00', 'Rua Andes', 234, '08.456-090', 'Guaianases','SP', 'RJ', '174.562.839-27', 'F'
-EXEC spInsert_Cliente 'Paulo Cesar Siqueira', '1984-04-04 00:00:00', 'Rua Castelo do PiauÌ', 232, '08.109-000', 'Itaquera','SP', 'MG', '832.901.654-48', 'M'
-EXEC spInsert_Cliente 'Rodrigo Favoroni', '1991-04-09 00:00:00', 'Rua Sans„o Castelo Branco', 10, '08.431-090', 'Guaianases','SP', 'SP', '502.674.913-87', 'M'
-EXEC spInsert_Cliente 'Fl·via Regina Brito', '1992-04-22 00:00:00', 'Rua Mariano Moro', 300, '08.200-123', 'Itaquera','SP', 'PR', '918.435.267-51', 'F'
+EXEC spInsert_Cliente 'Paulo Cesar Siqueira', '1984-04-04 00:00:00', 'Rua Castelo do Piau√≠', 232, '08.109-000', 'Itaquera','SP', 'MG', '832.901.654-48', 'M'
+EXEC spInsert_Cliente 'Rodrigo Favoroni', '1991-04-09 00:00:00', 'Rua Sans√£o Castelo Branco', 10, '08.431-090', 'Guaianases','SP', 'SP', '502.674.913-87', 'M'
+EXEC spInsert_Cliente 'Fl√°via Regina Brito', '1992-04-22 00:00:00', 'Rua Mariano Moro', 300, '08.200-123', 'Itaquera','SP', 'PR', '918.435.267-51', 'F'
 
-/*d) Criar via stored procedure as encomendas abaixo relacionadas, fazendo as verificaÁıes abaixo:
-- No momento da encomenda o cliente ir· fornecer o seu cpf. Caso ele n„o tenha sido
-cadastrado enviar a mensagem ìn„o foi possÌvel efetivar a encomenda pois o cliente xxxx n„o
-est· cadastradoî
-- Verificar se a data de entrega n„o È menor do que a data da encomenda. Caso seja enviar a
-mensagem ìn„o È possÌvel entregar uma encomenda antes da encomenda ser realizadaî
-- Caso tudo esteja correto, efetuar a encomenda e emitir a mensagem: ìEncomenda XXX para
-o cliente YYY efetuada com sucessoî sendo que no lugar de XXX dever· aparecer o n˙mero da
-encomenda e no YYY dever· aparecer o nome do cliente;*/
+/*d) Criar via stored procedure as encomendas abaixo relacionadas, fazendo as verifica√ß√µes abaixo:
+- No momento da encomenda o cliente ir√° fornecer o seu cpf. Caso ele n√£o tenha sido
+cadastrado enviar a mensagem ‚Äún√£o foi poss√≠vel efetivar a encomenda pois o cliente xxxx n√£o
+est√° cadastrado‚Äù
+- Verificar se a data de entrega n√£o √© menor do que a data da encomenda. Caso seja enviar a
+mensagem ‚Äún√£o √© poss√≠vel entregar uma encomenda antes da encomenda ser realizada‚Äù
+- Caso tudo esteja correto, efetuar a encomenda e emitir a mensagem: ‚ÄúEncomenda XXX para
+o cliente YYY efetuada com sucesso‚Äù sendo que no lugar de XXX dever√° aparecer o n√∫mero da
+encomenda e no YYY dever√° aparecer o nome do cliente;*/
 
 CREATE PROCEDURE spcpf_entrega
 	@cpf VARCHAR (20)
@@ -119,13 +119,13 @@ CREATE PROCEDURE spcpf_entrega
 AS
 	IF EXISTS (SELECT cpfCliente FROM tblCliente WHERE cpfCliente LIKE @cpf)
 	BEGIN
-		PRINT ('n„o foi possÌvel efetivar a encomenda pois o cliente'+@cpf+' n„o est· cadastrado')
+		PRINT ('n√£o foi poss√≠vel efetivar a encomenda pois o cliente'+@cpf+' n√£o est√° cadastrado')
 	END 
 	ELSE
 	BEGIN
 	IF EXISTS (SELECT dataEncomenda FROM tblEncomenda WHERE dataEntregaEncomenda<@dataEncomenda)
 	BEGIN
-	PRINT ('n„o È possÌvel entregar uma encomenda antes da encomenda ser realizada')
+	PRINT ('n√£o √© poss√≠vel entregar uma encomenda antes da encomenda ser realizada')
 	END
 	ELSE
 	BEGIN
@@ -167,12 +167,12 @@ EXEC spInserir_Encomenda 8, 4, 2, 150.00
 EXEC spInserir_Encomenda 9, 4, 3, 100.00
 EXEC spInserir_Encomenda 10, 5, 6, 150.00
 
-/*f) ApÛs todos os cadastros, criar Stored procedures para alterar o que se pede:
-1- O preÁo dos produtos da categoria ìBolo festaî sofreram um aumento de 10%
-2- O preÁo dos produtos categoria ìBolo simplesî est„o em promoÁ„o e ter„o um desconto
+/*f) Ap√≥s todos os cadastros, criar Stored procedures para alterar o que se pede:
+1- O pre√ßo dos produtos da categoria ‚ÄúBolo festa‚Äù sofreram um aumento de 10%
+2- O pre√ßo dos produtos categoria ‚ÄúBolo simples‚Äù est√£o em promo√ß√£o e ter√£o um desconto
 de 20%;
-3- O preÁo dos produtos categoria ìTortaî aumentaram 25%
-4- O preÁo dos produtos categoria ìSalgadoî, com exceÁ„o da esfiha de carne, sofreram um
+3- O pre√ßo dos produtos categoria ‚ÄúTorta‚Äù aumentaram 25%
+4- O pre√ßo dos produtos categoria ‚ÄúSalgado‚Äù, com exce√ß√£o da esfiha de carne, sofreram um
 aumento de 20%*/
 
 CREATE PROCEDURE spAumenta_preco
@@ -188,10 +188,10 @@ AS
 		EXEC spAumenta_preco 
 
 /*g) Criar uma procedure para excluir clientes pelo CPF sendo que:
-1- Caso o cliente possua encomendas emitir a mensagem ìImpossivel remover esse cliente pois o
-cliente XXXXX possui encomendas; onde XXXXX È o nome do cliente.
-2- Caso o cliente n„o possua encomendas realizar a remoÁ„o e emitir a mensagem ìCliente XXXX
-removido com sucessoî, onde XXXX È o nome do cliente;*/
+1- Caso o cliente possua encomendas emitir a mensagem ‚ÄúImpossivel remover esse cliente pois o
+cliente XXXXX possui encomendas; onde XXXXX √© o nome do cliente.
+2- Caso o cliente n√£o possua encomendas realizar a remo√ß√£o e emitir a mensagem ‚ÄúCliente XXXX
+removido com sucesso‚Äù, onde XXXX √© o nome do cliente;*/
 
 CREATE PROCEDURE spExcluir_Cliente
 @cpf VARCHAR (20)
@@ -213,10 +213,10 @@ END
 EXEC spExcluir_Cliente '305.928.716-32', 'Samira Fatah'
 
 /*h) Criar uma procedure que permita excluir qualquer item de uma encomenda cuja data de
-entrega seja maior que a data atual. Para tal o cliente dever· fornecer o cÛdigo da encomenda
-e o cÛdigo do produto que ser· excluÌdo da encomenda. A procedure dever· remover o item e
-atualizar o valor total da encomenda, do qual dever· ser subtraÌdo o valor do item a ser
-removido. A procedure poder· remover apenas um item da encomenda de cada vez.*/
+entrega seja maior que a data atual. Para tal o cliente dever√° fornecer o c√≥digo da encomenda
+e o c√≥digo do produto que ser√° exclu√≠do da encomenda. A procedure dever√° remover o item e
+atualizar o valor total da encomenda, do qual dever√° ser subtra√≠do o valor do item a ser
+removido. A procedure poder√° remover apenas um item da encomenda de cada vez.*/
 
 CREATE PROCEDURE spDelete_Item
 @dataAtual DATE,
@@ -230,12 +230,12 @@ AS
 	ELSE
 	IF NOT EXISTS (SELECT codEncomenda FROM tblEncomenda WHERE codEncomenda LIKE @codEncomenda)
 	BEGIN
-		PRINT('Impossivel apagar item de uma encomenda que n„o existe')
+		PRINT('Impossivel apagar item de uma encomenda que n√£o existe')
 	END
 	ELSE
 	IF NOT EXISTS (SELECT codProduto FROM tblProduto WHERE codProduto LIKE @codProduto)
 	BEGIN
-		PRINT('Impossivel apagar item que n„o existe')
+		PRINT('Impossivel apagar item que n√£o existe')
 	END
 	ELSE
 	BEGIN
