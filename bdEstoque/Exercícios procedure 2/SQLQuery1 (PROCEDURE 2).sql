@@ -16,7 +16,7 @@ AS
 SELECT * FROM tblCategoriaProduto
 EXEC spInsert_Ctg 'Bolo Festa'
 EXEC spInsert_Ctg 'Bolo Simples'
-EXEC spInsert_Ctg 'Bolo Torta'
+EXEC spInsert_Ctg 'Torta'
 EXEC spInsert_Ctg 'Salgado'
 
 /*b) Criar uma Stored Procedure para inserir os produtos abaixo, sendo que, a procedure deverá 
