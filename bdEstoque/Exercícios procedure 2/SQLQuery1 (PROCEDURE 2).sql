@@ -186,6 +186,61 @@ AS
 	WHERE codCategoria = (SELECT codCategoria FROM tblCategoriaProduto WHERE nomeCategoria LIKE @nome)
 
 		EXEC spAumenta_preco 
+		
+		------
+CREATE PROCEDURE spAumenta_preco
+	@nome VARCHAR(255),
+	@percentual INT
+AS
+	DECLARE @valor DECIMAL
+	SET @valor = (SELECT precoVenda FROM tblProduto)
+	UPDATE tblProduto
+	SET precoVenda = (@valor*@percentual/100)+@valor
+	WHERE codCategoria = (SELECT codCategoria FROM tblCategoriaProduto WHERE nomeCategoria LIKE @nome)
+
+
+	CREATE PROCEDURE spdiminui_preco
+	@nome VARCHAR(255),
+	@percentual INT
+AS
+	DECLARE @valor DECIMAL
+	SET @valor = (SELECT precoVenda FROM tblProduto)
+	UPDATE tblProduto
+	SET precoVenda = (@valor*@percentual/100)-@valor
+	WHERE codCategoria = (SELECT codCategoria FROM tblCategoriaProduto WHERE nomeCategoria LIKE @nome)
+
+	EXEC spAumenta_preco 'Bolo Festa', 10
+	EXEC spdiminui_preco 'Bolo Simples', 20
+	EXEC spAumenta_preco 'torta', 25
+
+
+
+	CREATE PROCEDURE spAumenta_precoSalgado
+	@nome VARCHAR (255),
+	@percentual INT
+AS
+ 
+  IF NOT EXISTS (SELECT nomeProduto FROM tblProduto WHERE codCategoria = 4)
+  BEGIN
+  PRINT ('Impossivel registrar aumento de '+@nome)
+  END
+    IF NOT EXISTS (SELECT nomeProduto FROM tblProduto WHERE nomeProduto LIKE 'Esfiha%')
+  BEGIN
+  PRINT ('Impossivel registrar aumento de salgado '+@nome+' pois não se pode aumentar o valor de esfihas no momento')
+  END
+  ELSE
+  BEGIN
+	DECLARE @valor DECIMAL
+	SET @valor = (SELECT precoVenda FROM tblProduto)
+	UPDATE tblProduto
+	SET precoVenda = (@valor*@percentual/100)+@valor
+	WHERE codProduto = (SELECT codProduto FROM tblProduto WHERE nomeProduto LIKE @nome)
+	END
+	
+	EXEC spAumenta_precoSalgado 'Coxinha frango', 20
+	EXEC spAumenta_precoSalgado 'Folhado queijo', 20
+	EXEC spAumenta_precoSalgado 'Risoles misto', 20
+
 
 /*g) Criar uma procedure para excluir clientes pelo CPF sendo que:
 1- Caso o cliente possua encomendas emitir a mensagem “Impossivel remover esse cliente pois o
