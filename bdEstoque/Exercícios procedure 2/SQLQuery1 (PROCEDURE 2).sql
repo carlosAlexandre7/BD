@@ -175,7 +175,7 @@ de 20%;
 4- O preço dos produtos categoria “Salgado”, com exceção da esfiha de carne, sofreram um
 aumento de 20%*/
 
-CREATE PROCEDURE spAumenta_preco
+/*CREATE PROCEDURE spAumenta_preco
 	@nome VARCHAR(255),
 	@percentual INT
 AS
@@ -185,9 +185,9 @@ AS
 	SET precoVenda = (@valor*@percentual/100)+@valor
 	WHERE codCategoria = (SELECT codCategoria FROM tblCategoriaProduto WHERE nomeCategoria LIKE @nome)
 
-		EXEC spAumenta_preco 
+		EXEC spAumenta_preco */
 		
-		------
+		
 CREATE PROCEDURE spAumenta_preco
 	@nome VARCHAR(255),
 	@percentual INT
