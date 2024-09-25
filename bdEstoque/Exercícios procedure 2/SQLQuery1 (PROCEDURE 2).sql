@@ -93,7 +93,7 @@ atendido pela confeitaria”*/
 		END
 
 		
-
+		SELECT * FROM tblCliente
 EXEC spInsert_Cliente 'Samira Fatah', '1990-05-05', 'Rua Aguapeí', 1000, '08.090-000', 'Guaianases','SP', 'SP', '305.928.716-32', 'F'
 EXEC spInsert_Cliente 'Celia Nogueira', '1992-06-06 00:00:00', 'Rua Andes', 234, '08.456-090', 'Guaianases','SP', 'RJ', '174.562.839-27', 'F'
 EXEC spInsert_Cliente 'Paulo Cesar Siqueira', '1984-04-04 00:00:00', 'Rua Castelo do Piauí', 232, '08.109-000', 'Itaquera','SP', 'MG', '832.901.654-48', 'M'
@@ -115,6 +115,7 @@ CREATE PROCEDURE spcpf_entrega
 	,@dataEncomenda DATE
 	,@valorTotal DECIMAL
 	,@dataEntrega  DATE
+	,@codCliente2 INT
 	
 AS
 	IF EXISTS (SELECT cpfCliente FROM tblCliente WHERE cpfCliente LIKE @cpf)
@@ -132,16 +133,16 @@ AS
 	DECLARE @codCliente INT, @codEncomenda INT
 	SET @codCliente = (SELECT codCliente FROM tblCliente WHERE cpfCliente LIKE @cpf)
 	INSERT tblEncomenda(dataEncomenda,codCliente,valorTotal,dataEntregaEncomenda) 
-	VALUES (@dataEncomenda,@codCliente,@valorTotal,@dataEntrega)
+	VALUES (@dataEncomenda,@codCliente2,@valorTotal,@dataEntrega)
 	SET @codEncomenda = (SELECT MAX(codEncomenda) FROM tblEncomenda)
-	PRINT ('Encomenda de codigo '+@codEncomenda+' para o cliente de codigo '+@codCliente+' efetuada com sucesso')
+	 PRINT ('Encomenda de codigo ' + CONVERT(VARCHAR, @codEncomenda) + ' para o cliente de codigo ' + CONVERT(VARCHAR, @codCliente) + ' efetuada com sucesso')
 	END
 END
-EXEC spcpf_entrega '22345678900', '2015-08-08', 450.00, '2015-08-15'
-EXEC spcpf_entrega '32345678900', '2015-10-10', 200.00, '2015-10-15'
-EXEC spcpf_entrega '42345678900', '2015-08-08', 450.00, '2015-08-15'
-	
 
+EXEC spcpf_entrega '22345678900', '2015-08-08', 450.00, '2015-08-15',1
+EXEC spcpf_entrega '32345678900', '2015-08-10', 200.00, '2015-10-15',2
+EXEC spcpf_entrega '42345678900', '2015-08-08', 450.00, '2015-08-15',3
+	SELECT * FROM tblEncomenda
 /*e) Ao adicionar a encomenda, criar uma Stored procedure, para que sejam inseridos os itens da 
 encomenda*/
 
@@ -161,12 +162,14 @@ EXEC spInserir_Encomenda 2, 1, 10, 70.00
 EXEC spInserir_Encomenda 3, 1, 9, 150.00
 EXEC spInserir_Encomenda 4, 1, 12, 125.00
 EXEC spInserir_Encomenda 5, 2, 9, 200.00
-EXEC spInserir_Encomenda 6, 3, 11, 100.00
+/*EXEC spInserir_Encomenda 6, 3, 11, 100.00
 EXEC spInserir_Encomenda 7, 3, 9, 50.00
 EXEC spInserir_Encomenda 8, 4, 2, 150.00
 EXEC spInserir_Encomenda 9, 4, 3, 100.00
-EXEC spInserir_Encomenda 10, 5, 6, 150.00
+EXEC spInserir_Encomenda 10, 5, 6, 150.00*/
 
+
+SELECT * FROM tblEncomenda
 /*f) Após todos os cadastros, criar Stored procedures para alterar o que se pede:
 1- O preço dos produtos da categoria “Bolo festa” sofreram um aumento de 10%
 2- O preço dos produtos categoria “Bolo simples” estão em promoção e terão um desconto
@@ -188,7 +191,7 @@ AS
 		EXEC spAumenta_preco */
 		
 		
-CREATE PROCEDURE spAumenta_preco
+CREATE PROCEDURE spAumenta_Preco
 	@nome VARCHAR(255),
 	@percentual INT
 AS
@@ -199,7 +202,7 @@ AS
 	WHERE codCategoria = (SELECT codCategoria FROM tblCategoriaProduto WHERE nomeCategoria LIKE @nome)
 
 
-	CREATE PROCEDURE spdiminui_preco
+	CREATE PROCEDURE spDiminui_Preco
 	@nome VARCHAR(255),
 	@percentual INT
 AS
@@ -236,6 +239,8 @@ AS
 	SET precoVenda = (@valor*@percentual/100)+@valor
 	WHERE codProduto = (SELECT codProduto FROM tblProduto WHERE nomeProduto LIKE @nome)
 	END
+
+	SELECT * FROM tblProduto
 	
 	EXEC spAumenta_precoSalgado 'Coxinha frango', 20
 	EXEC spAumenta_precoSalgado 'Folhado queijo', 20
