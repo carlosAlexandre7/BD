@@ -12,7 +12,6 @@ AS
 		VALUES (@nomeCategoria)
 		PRINT ('Categoria cadastrada com sucesso!')
 	END
-
 SELECT * FROM tblCategoriaProduto
 EXEC spInsert_Ctg 'Bolo Festa'
 EXEC spInsert_Ctg 'Bolo Simples'
@@ -81,14 +80,14 @@ atendido pela confeitaria”*/
 		END
 		ELSE
 		BEGIN
-			IF EXISTS (SELECT bairroCliente FROM tblCliente WHERE bairroCliente NOT LIKE 'Itaquera' AND bairroCliente NOT LIKE 'Guaianases')
-			BEGIN
-				PRINT ('Não foi possivel cadastrar! não atendemos o bairro ' +@Bairro)
-			END
-			ELSE
+			IF (@bairro LIKE 'itaquera' OR @bairro LIKE 'Itaquera' OR @bairro LIKE 'guaianazes' OR @bairro LIKE 'Guaianazes' OR @bairro LIKE 'Guaianases' OR @bairro LIKE 'guaianases')
 			BEGIN
 				INSERT tblCliente (nomeCliente,dataNascimento,ruaCliente,numRuaCliente,cepCliente,bairroCliente,cidadeCliente,estadoCliente,cpfCliente,sexoCliente)
 				VALUES (@nome, @datanasc, @rua, @numRua, @cep, @Bairro,@cidade, @estado, @cpf, @sexo)
+			END
+			ELSE
+			BEGIN
+				PRINT ('Não foi possivel cadastrar! não atendemos o bairro ' +@Bairro)
 			END
 		END
 
@@ -99,6 +98,13 @@ EXEC spInsert_Cliente 'Celia Nogueira', '1992-06-06 00:00:00', 'Rua Andes', 234,
 EXEC spInsert_Cliente 'Paulo Cesar Siqueira', '1984-04-04 00:00:00', 'Rua Castelo do Piauí', 232, '08.109-000', 'Itaquera','SP', 'MG', '832.901.654-48', 'M'
 EXEC spInsert_Cliente 'Rodrigo Favoroni', '1991-04-09 00:00:00', 'Rua Sansão Castelo Branco', 10, '08.431-090', 'Guaianases','SP', 'SP', '502.674.913-87', 'M'
 EXEC spInsert_Cliente 'Flávia Regina Brito', '1992-04-22 00:00:00', 'Rua Mariano Moro', 300, '08.200-123', 'Itaquera','SP', 'PR', '918.435.267-51', 'F'
+EXEC spInsert_Cliente 'Lucas Martins', '1988-01-15', 'Av. das Nações', 1500, '10.123-456', 'Itaquera','SP', 'SP', '123.456.789-00', 'M';
+EXEC spInsert_Cliente 'Mariana Silva', '1995-11-20', 'Rua das Flores', 205, '10.789-012', 'Guaianases', 'São Paulo', 'SP', '987.654.321-00', 'F';
+EXEC spInsert_Cliente 'Gabriel Almeida', '1990-03-05', 'Rua do Sol', 75, '10.321-654', 'Itaquera', 'São Paulo', 'SP', '456.789.123-00', 'M';
+EXEC spInsert_Cliente 'Tatiane Souza', '1985-07-30', 'Rua da Paz', 85, '10.456-789', 'Guaianases', 'São Paulo', 'SP', '321.654.987-00', 'F';
+EXEC spInsert_Cliente 'Felipe Rocha', '1993-12-12', 'Av. São Paulo', 250, '10.654-321', 'Itaquera', 'São Paulo', 'SP', '654.321.098-76', 'M';
+
+
 
 /*d) Criar via stored procedure as encomendas abaixo relacionadas, fazendo as verificações abaixo:
 - No momento da encomenda o cliente irá fornecer o seu cpf. Caso ele não tenha sido
@@ -142,6 +148,13 @@ END
 EXEC spcpf_entrega '22345678900', '2015-08-08', 450.00, '2015-08-15',1
 EXEC spcpf_entrega '32345678900', '2015-08-10', 200.00, '2015-10-15',2
 EXEC spcpf_entrega '42345678900', '2015-08-08', 450.00, '2015-08-15',3
+EXEC spcpf_entrega '22345678901', '2015-08-01', 450.00, '2015-08-15',4
+EXEC spcpf_entrega '32345678902', '2015-08-12', 200.00, '2015-10-15',5
+EXEC spcpf_entrega '42345678903', '2015-08-09', 450.00, '2015-08-15',6
+EXEC spcpf_entrega '22345678904', '2015-08-07', 450.00, '2015-08-15',7
+EXEC spcpf_entrega '32345678905', '2015-08-03', 200.00, '2015-10-15',8
+EXEC spcpf_entrega '42345678906', '2015-08-05', 450.00, '2015-08-15',9
+EXEC spcpf_entrega '42345678907', '2015-08-10', 450.00, '2015-08-15',10
 	SELECT * FROM tblEncomenda
 /*e) Ao adicionar a encomenda, criar uma Stored procedure, para que sejam inseridos os itens da 
 encomenda*/
@@ -162,14 +175,14 @@ EXEC spInserir_Encomenda 2, 1, 10, 70.00
 EXEC spInserir_Encomenda 3, 1, 9, 150.00
 EXEC spInserir_Encomenda 4, 1, 12, 125.00
 EXEC spInserir_Encomenda 5, 2, 9, 200.00
-/*EXEC spInserir_Encomenda 6, 3, 11, 100.00
+EXEC spInserir_Encomenda 6, 3, 11, 100.00
 EXEC spInserir_Encomenda 7, 3, 9, 50.00
 EXEC spInserir_Encomenda 8, 4, 2, 150.00
 EXEC spInserir_Encomenda 9, 4, 3, 100.00
-EXEC spInserir_Encomenda 10, 5, 6, 150.00*/
+EXEC spInserir_Encomenda 10, 5, 6, 150.00
+SELECT * FROM tblProduto
 
-
-SELECT * FROM tblEncomenda
+SELECT * FROM tblItensEncomenda
 /*f) Após todos os cadastros, criar Stored procedures para alterar o que se pede:
 1- O preço dos produtos da categoria “Bolo festa” sofreram um aumento de 10%
 2- O preço dos produtos categoria “Bolo simples” estão em promoção e terão um desconto
@@ -215,7 +228,7 @@ AS
 	EXEC spAumenta_preco 'Bolo Festa', 10
 	EXEC spdiminui_preco 'Bolo Simples', 20
 	EXEC spAumenta_preco 'torta', 25
-
+	SELECT * FROM tblProduto
 
 
 	CREATE PROCEDURE spAumenta_precoSalgado
