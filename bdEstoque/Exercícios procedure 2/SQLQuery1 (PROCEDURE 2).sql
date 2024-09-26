@@ -121,8 +121,8 @@ CREATE PROCEDURE spcpf_entrega
 	,@dataEncomenda DATE
 	,@valorTotal DECIMAL
 	,@dataEntrega  DATE
-	,@codCliente2 INT
-	
+	,@codCliente INT
+		
 AS
 	IF EXISTS (SELECT cpfCliente FROM tblCliente WHERE cpfCliente LIKE @cpf)
 	BEGIN
@@ -136,10 +136,9 @@ AS
 	END
 	ELSE
 	BEGIN
-	DECLARE @codCliente INT, @codEncomenda INT
-	SET @codCliente = (SELECT codCliente FROM tblCliente WHERE cpfCliente LIKE @cpf)
+	DECLARE @codEncomenda INT
 	INSERT tblEncomenda(dataEncomenda,codCliente,valorTotal,dataEntregaEncomenda) 
-	VALUES (@dataEncomenda,@codCliente2,@valorTotal,@dataEntrega)
+	VALUES (@dataEncomenda,@codCliente,@valorTotal,@dataEntrega)
 	SET @codEncomenda = (SELECT MAX(codEncomenda) FROM tblEncomenda)
 	 PRINT ('Encomenda de codigo ' + CONVERT(VARCHAR, @codEncomenda) + ' para o cliente de codigo ' + CONVERT(VARCHAR, @codCliente) + ' efetuada com sucesso')
 	END
@@ -155,6 +154,7 @@ EXEC spcpf_entrega '22345678904', '2015-08-07', 450.00, '2015-08-15',7
 EXEC spcpf_entrega '32345678905', '2015-08-03', 200.00, '2015-10-15',8
 EXEC spcpf_entrega '42345678906', '2015-08-05', 450.00, '2015-08-15',9
 EXEC spcpf_entrega '42345678907', '2015-08-10', 450.00, '2015-08-15',10
+EXEC spcpf_entrega '42345678907', '2015-08-10', 450.00, '2025-08-15',3
 	SELECT * FROM tblEncomenda
 /*e) Ao adicionar a encomenda, criar uma Stored procedure, para que sejam inseridos os itens da 
 encomenda*/
@@ -181,7 +181,7 @@ EXEC spInserir_Encomenda 8, 4, 2, 150.00
 EXEC spInserir_Encomenda 9, 4, 3, 100.00
 EXEC spInserir_Encomenda 10, 5, 6, 150.00
 SELECT * FROM tblProduto
-
+SELECT * FROM tblEncomenda
 SELECT * FROM tblItensEncomenda
 /*f) Após todos os cadastros, criar Stored procedures para alterar o que se pede:
 1- O preço dos produtos da categoria “Bolo festa” sofreram um aumento de 10%
@@ -208,28 +208,27 @@ CREATE PROCEDURE spAumenta_Preco
 	@nome VARCHAR(255),
 	@percentual INT
 AS
-	DECLARE @valor DECIMAL
-	SET @valor = (SELECT precoVenda FROM tblProduto)
+BEGIN
 	UPDATE tblProduto
-	SET precoVenda = (@valor*@percentual/100)+@valor
+	SET precoVenda = precoVenda + (precoVenda * @percentual / 100)
 	WHERE codCategoria = (SELECT codCategoria FROM tblCategoriaProduto WHERE nomeCategoria LIKE @nome)
+END
 
-
-	CREATE PROCEDURE spDiminui_Preco
+CREATE PROCEDURE spDiminui_Preco
 	@nome VARCHAR(255),
 	@percentual INT
 AS
-	DECLARE @valor DECIMAL
-	SET @valor = (SELECT precoVenda FROM tblProduto)
+BEGIN
 	UPDATE tblProduto
-	SET precoVenda = (@valor*@percentual/100)-@valor
+	SET precoVenda = precoVenda - (precoVenda * @percentual / 100)
 	WHERE codCategoria = (SELECT codCategoria FROM tblCategoriaProduto WHERE nomeCategoria LIKE @nome)
+END
 
 	EXEC spAumenta_preco 'Bolo Festa', 10
 	EXEC spdiminui_preco 'Bolo Simples', 20
 	EXEC spAumenta_preco 'torta', 25
 	SELECT * FROM tblProduto
-
+	
 
 	CREATE PROCEDURE spAumenta_precoSalgado
 	@nome VARCHAR (255),
@@ -246,16 +245,15 @@ AS
   END
   ELSE
   BEGIN
-	DECLARE @valor DECIMAL
-	SET @valor = (SELECT precoVenda FROM tblProduto)
+    
 	UPDATE tblProduto
-	SET precoVenda = (@valor*@percentual/100)+@valor
+	SET precoVenda = (precoVenda*@percentual/100)+precoVenda
 	WHERE codProduto = (SELECT codProduto FROM tblProduto WHERE nomeProduto LIKE @nome)
 	END
 
-	SELECT * FROM tblProduto
+    SELECT * FROM tblProduto
 	
-	EXEC spAumenta_precoSalgado 'Coxinha frango', 20
+	EXEC spAumenta_precoSalgado 'Coxinha de frango', 20
 	EXEC spAumenta_precoSalgado 'Folhado queijo', 20
 	EXEC spAumenta_precoSalgado 'Risoles misto', 20
 
@@ -280,10 +278,11 @@ PRINT ('Impossivel remover esse cliente pois o cliente '+@nomeCliente+ ' possui 
 END
 ELSE
 BEGIN
-	DELETE FROM tblCliente WHERE codCliente = @codCliente
+	DELETE FROM tblCliente WHERE codCliente = @codCliente AND cpfCliente = @cpf AND nomeCliente LIKE @nomeCliente
 END
 
-EXEC spExcluir_Cliente '305.928.716-32', 'Samira Fatah'
+SELECT * FROM tblCliente 
+EXEC spExcluir_Cliente '654.321.098-76','Felipe Rocha'
 
 /*h) Criar uma procedure que permita excluir qualquer item de uma encomenda cuja data de
 entrega seja maior que a data atual. Para tal o cliente deverá fornecer o código da encomenda
@@ -292,21 +291,21 @@ atualizar o valor total da encomenda, do qual deverá ser subtraído o valor do 
 removido. A procedure poderá remover apenas um item da encomenda de cada vez.*/
 
 CREATE PROCEDURE spDelete_Item
-@dataAtual DATE,
 @codEncomenda INT,
-@codProduto INT
+@codProduto INT,
+@dataAtual DATE
 AS
 	IF EXISTS (SELECT dataEntregaEncomenda FROM tblEncomenda WHERE dataEntregaEncomenda<@dataAtual)
 	BEGIN 
 	PRINT ('Impossivel apagar item com data de entrega que ja ocorreu')
 	END
 	ELSE
-	IF NOT EXISTS (SELECT codEncomenda FROM tblEncomenda WHERE codEncomenda LIKE @codEncomenda)
+	IF NOT EXISTS (SELECT codEncomenda FROM tblEncomenda WHERE codEncomenda = @codEncomenda)
 	BEGIN
 		PRINT('Impossivel apagar item de uma encomenda que não existe')
 	END
 	ELSE
-	IF NOT EXISTS (SELECT codProduto FROM tblProduto WHERE codProduto LIKE @codProduto)
+	IF NOT EXISTS (SELECT codProduto FROM tblProduto WHERE codProduto = @codProduto)
 	BEGIN
 		PRINT('Impossivel apagar item que não existe')
 	END
@@ -315,10 +314,29 @@ AS
 	DECLARE @valorProduto DECIMAL
 	SET @valorProduto = (SELECT precoVenda FROM tblProduto WHERE codProduto = @codProduto)
 	UPDATE tblItensEncomenda
-	SET codProduto = ''
-	WHERE codEncomenda LIKE @codEncomenda AND codProduto LIKE @codProduto
-	UPDATE tblItensEncomenda
 	SET subTotal = subTotal-@valorProduto
+	WHERE @codProduto = codProduto AND codEncomenda = @codEncomenda
+	END
+	IF NOT EXISTS (SELECT codEncomenda FROM tblEncomenda WHERE codEncomenda  = @codEncomenda)
+	BEGIN
+    DELETE FROM tblEncomenda WHERE @codEncomenda = codEncomenda
+	END
+	ELSE
+	BEGIN
+	PRINT ('FAZ O L')
 	END
 
-	EXEC spDelete_Item '2024-09-11', 2, 10
+	
+	DROP PROCEDURE spDelete_Item
+
+	SELECT * FROM tblItensEncomenda
+	SELECT * FROM tblEncomenda
+	
+
+	EXEC spDelete_Item  1, 1,'11-08-2014'
+
+	SELECT * FROM  tblCategoriaProduto
+	SELECT * FROM  tblCliente
+	SELECT * FROM  tblEncomenda
+	SELECT * FROM  tblItensEncomenda
+	SELECT * FROM  tblProduto
