@@ -1,6 +1,6 @@
 CREATE DATABASE bdEstoque2
 GO
-USE bdEstoque2
+USE bdEstoque2	
 --DROP DATABASE bdEstoque
 
 CREATE TABLE tbCliente(
@@ -48,7 +48,7 @@ codItensVenda INT PRIMARY KEY IDENTITY(1,1)
 )
 
 CREATE TABLE tbEntradaProduto (
-    codEntrada INT PRIMARY KEY,
+    codEntrada INT PRIMARY KEY IDENTITY(1,1),
     codProduto INT,
     dataEntradaProduto DATE,
     quantidadeEntradaProduto INT,
@@ -56,7 +56,7 @@ CREATE TABLE tbEntradaProduto (
 )
 
 CREATE TABLE tbSaidaProduto (
-    codSaidaProduto INT PRIMARY KEY,
+    codSaidaProduto INT PRIMARY KEY IDENTITY(1,1),
     dataSaidaProduto DATE,
     codProduto INT,
     quantidadeSaidaProduto INT,
